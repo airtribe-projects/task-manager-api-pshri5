@@ -18,6 +18,9 @@ app.get('/tasks', (req, res) => {
 // GET /tasks/:id - Retrieve a specific task by its ID
 app.get('/tasks/:id', (req, res) => {
   const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+  return res.status(400).json({ error: 'Invalid task ID'});
+}
   const task = tasks.find(task => task.id === id);
   
   if (!task) {
@@ -42,7 +45,7 @@ app.post('/tasks', (req, res) => {
   }
   
   // Generate a new ID (max ID + 1)
-  const newId = Math.max(0, ...tasks.map(task => task.id)) + 1;
+  const newId = Math.max(-1, ...tasks.map(task => task.id)) + 1;
   
   const newTask = {
     id: newId,
@@ -59,6 +62,9 @@ app.post('/tasks', (req, res) => {
 // PUT /tasks/:id - Update an existing task
 app.put('/tasks/:id', (req, res) => {
   const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+  return res.status(400).json({ error: 'Invalid task ID'});
+}
   const { title, description, completed } = req.body;
   
   // Validate required fields
@@ -92,6 +98,9 @@ app.put('/tasks/:id', (req, res) => {
 // DELETE /tasks/:id - Delete a task
 app.delete('/tasks/:id', (req, res) => {
   const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+  return res.status(400).json({ error: 'Invalid task ID'});
+}
   const taskIndex = tasks.findIndex(task => task.id === id);
   
   if (taskIndex === -1) {
@@ -109,6 +118,7 @@ app.listen(port, (err) => {
     }
     console.log(`Server is listening on ${port}`);
 });
+
 
 module.exports = app;
 
